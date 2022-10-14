@@ -6,9 +6,9 @@
 Golang SDK for 票通
 
 
-# Development
+## Development
 
-## Install [pre-commit](https://pre-commit.com/)
+### Install [pre-commit](https://pre-commit.com/)
 
 ```sh
 # if you havn't install pre-commit on your mac
@@ -18,14 +18,14 @@ brew install pre-commit
 pre-commit install
 ```
 
-## Install [commitlint](https://commitlint.js.org/)
+### Install [commitlint](https://commitlint.js.org/)
 
 ```sh
 npm install -g commitlint
 npm install -g @commitlint/config-conventional
 ```
 
-## Install [golangci-lint](https://golangci-lint.run/)
+### Install [golangci-lint](https://golangci-lint.run/)
 
 ```sh
 brew install golangci/tap/golangci-lint
