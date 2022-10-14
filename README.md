@@ -1,7 +1,6 @@
 # piaotong
 
-[![GoDoc](https://godoc.org/github.com/sdcxtech/piaotong?status.svg)](https://godoc.org/github.com/sdcxtech/piaotong)
-
+[![GoDoc](https://pkg.go.dev/badge/github.com/sdcxtech/piaotong)](https://pkg.go.dev/github.com/sdcxtech/piaotong)
 
 Golang SDK for 票通
 
