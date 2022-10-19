@@ -57,7 +57,7 @@ linters-settings:
     sections:
       - standard # Captures all standard packages if they do not match another section.
       - default # Contains all imports that could not be matched to another section type.
-      - prefix(github.com/sdcxtech/piaotong/) # Groups all imports with the specified Prefix.
+      - prefix(github.com/sdcxtech/piaotong) # Groups all imports with the specified Prefix.
     # Separators that should be present between sections.
     # Default: ["newLine"]
     section-separators:
@@ -68,4 +68,4 @@ linters-settings:
       # Choose whether or not to use the extra rules that are disabled
       # by default
       extra-rules: false
-      module-path: github.com/sdcxtech/piaotong/
+      module-path: github.com/sdcxtech/piaotong
