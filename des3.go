@@ -1,7 +1,7 @@
 package piaotong
 
 import (
-	"github.com/sdcxtech/openssl/v2"
+	"github.com/forgoer/openssl"
 )
 
 func (c *Client) Encrypt(data []byte) (string, error) {

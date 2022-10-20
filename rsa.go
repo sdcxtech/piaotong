@@ -4,7 +4,7 @@ import (
 	"crypto"
 	"fmt"
 
-	"github.com/sdcxtech/openssl/v2"
+	"github.com/forgoer/openssl"
 )
 
 // SignRequest 对向票通发起的请求进行签名

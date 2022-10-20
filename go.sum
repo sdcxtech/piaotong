@@ -1,13 +1,13 @@
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/forgoer/openssl v1.4.0 h1:rPMnQ92OKuBsKnfY/GmUDunnP72Cy+zviAompWMdC9U=
+github.com/forgoer/openssl v1.4.0/go.mod h1:NMVFOzYeLVR7UiGTxsa+A21nrERTZ3Rv2JHDPcJpDyI=
 github.com/go-resty/resty/v2 v2.7.0 h1:me+K9p3uhSmXtrBZ4k9jcEAfJmuC8IivWHwaLZwPrFY=
 github.com/go-resty/resty/v2 v2.7.0/go.mod h1:9PWDzw47qPphMRFfhsyk0NnSgvluHcljSMVIq3w7q0I=
 github.com/jkomyno/nanoid v0.0.0-20210415085252-937cefe9123e h1:A989BWTFdvU9CJ8xvwPAgRiw567A1ZtFYnJn+5mBcdI=
 github.com/jkomyno/nanoid v0.0.0-20210415085252-937cefe9123e/go.mod h1:SGgCMakxrFA/koebjyty7cDQU4OMDL38eClGI+oy+bA=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
-github.com/sdcxtech/openssl/v2 v2.0.2 h1:R4jFBG6SKXckVKY7AoIpBjwSA7mmtNh6pEOZUkq8RI0=
-github.com/sdcxtech/openssl/v2 v2.0.2/go.mod h1:aEFAgQxPZz0cGI3w6HhFWlXkYCr606Gd7UGpJkE5gHM=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.4.0 h1:2E4SXV/wtOkTonXsotYi4li6zVWxYlZuYNCXe9XRJyk=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
