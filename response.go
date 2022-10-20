@@ -1,6 +1,8 @@
 package piaotong
 
-import "encoding/json"
+import (
+	"strings"
+)
 
 type Response struct {
 	Code     string `json:"code"`
@@ -10,18 +12,20 @@ type Response struct {
 	Content  string `json:"content,omitempty"`
 }
 
-func (c *Client) decryptAndUnmarshalResponse(content string, v any) error {
-	data, err := c.Decrypt(content)
-	if err != nil {
-		return err
+func (r *Response) SignatureContent() string {
+	pairs := [][2]string{
+		{"code", r.Code},
+		{"content", r.Content},
+		{"msg", r.Msg},
+		{"serialNo", r.SerialNo},
 	}
 
-	err = json.Unmarshal(data, v)
-	if err != nil {
-		return err
+	parts := make([]string, 0, len(pairs))
+	for i := range pairs {
+		parts = append(parts, strings.Join(pairs[i][:], "="))
 	}
 
-	return nil
+	return strings.Join(parts, "&")
 }
 
 func (r *Response) isError() bool {

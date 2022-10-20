@@ -2,7 +2,9 @@ package piaotong
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -10,6 +12,8 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/jkomyno/nanoid"
 )
+
+var ErrInvalidSignature = errors.New("invalid signature")
 
 var timezoneBeijing = time.FixedZone("Beijing Time", int(8*time.Hour.Seconds()))
 
@@ -130,8 +134,8 @@ type (
 
 	OpenBlueInvoiceResponse struct {
 		InvoiceReqSerialNo string `json:"invoiceReqSerialNo"`
-		QRCodePath         string `json:"qrCodePath"`
-		QRCode             string `json:"qrCode"`
+		QRCodePath         string `json:"qrCodePath"` // base64 decoded
+		QRCode             string `json:"qrCode"`     // base64 encoded
 	}
 )
 
@@ -144,6 +148,13 @@ func (c *Client) OpenBlueInvoice(
 	if err != nil {
 		return nil, err
 	}
+
+	qrcodePath, err := base64DecodeString(resp.QRCodePath)
+	if err != nil {
+		return nil, err
+	}
+
+	resp.QRCodePath = string(qrcodePath)
 
 	return resp, nil
 }
@@ -161,8 +172,8 @@ type (
 
 	OpenRedInvoiceResponse struct {
 		InvoiceReqSerialNo string `json:"invoiceReqSerialNo"`
-		QRCodePath         string `json:"qrCodePath"`
-		QRCode             string `json:"qrCode,omitempty"`
+		QRCodePath         string `json:"qrCodePath"`       // base64 decoded
+		QRCode             string `json:"qrCode,omitempty"` // base64 encoded
 	}
 )
 
@@ -175,6 +186,13 @@ func (c *Client) OpenRedInvoice(
 	if err != nil {
 		return nil, err
 	}
+
+	qrcodePath, err := base64DecodeString(resp.QRCodePath)
+	if err != nil {
+		return nil, err
+	}
+
+	resp.QRCodePath = string(qrcodePath)
 
 	return resp, nil
 }
@@ -201,12 +219,12 @@ type (
 		TaxAmount                string `json:"taxAmount,omitempty"`
 		InvoiceLayoutFileType    string `json:"invoiceLayoutFileType,omitempty"`
 		InvoicePdf               string `json:"invoicePdf,omitempty"`
-		DownloadURL              string `json:"downloadUrl,omitempty"`
-		VatPlatformInvPreviewURL string `json:"vatPlatformInvPreviewUrl,omitempty"`
+		DownloadURL              string `json:"downloadUrl,omitempty"`              // base64 decoded
+		VatPlatformInvPreviewURL string `json:"vatPlatformInvPreviewUrl,omitempty"` // base64 decoded
 		ExtensionNum             string `json:"extensionNum,omitempty"`
 		DiskNo                   string `json:"diskNo,omitempty"`
-		InvPreviewQrcodePath     string `json:"invPreviewQrcodePath,omitempty"`
-		InvPreviewQrcode         string `json:"invPreviewQrcode,omitempty"`
+		InvPreviewQrcodePath     string `json:"invPreviewQrcodePath,omitempty"` // base64 decoded
+		InvPreviewQrcode         string `json:"invPreviewQrcode,omitempty"`     // base64 encoded
 	}
 )
 
@@ -219,6 +237,24 @@ func (c *Client) QueryInvoice(
 	if err != nil {
 		return nil, err
 	}
+
+	downloadURL, err := base64DecodeString(resp.DownloadURL)
+	if err != nil {
+		return nil, err
+	}
+	resp.DownloadURL = string(downloadURL)
+
+	vatPlatformInvPreviewURL, err := base64DecodeString(resp.VatPlatformInvPreviewURL)
+	if err != nil {
+		return nil, err
+	}
+	resp.VatPlatformInvPreviewURL = string(vatPlatformInvPreviewURL)
+
+	invPreviewQrcodePath, err := base64DecodeString(resp.InvPreviewQrcodePath)
+	if err != nil {
+		return nil, err
+	}
+	resp.InvPreviewQrcodePath = string(invPreviewQrcodePath)
 
 	return resp, nil
 }
@@ -322,11 +358,63 @@ func (c *Client) request(ctx context.Context, url string, reqContent, respPtr an
 		return err
 	}
 
+	err = c.VerifyResponse(respBody)
+	if err != nil {
+		return err
+	}
+
 	if respBody.isError() {
 		return respBody.toError()
 	}
 
 	err = c.decryptAndUnmarshalResponse(respBody.Content, respPtr)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Client) buildRequest(content any) (*Request, error) {
+	data, err := json.Marshal(content)
+	if err != nil {
+		return nil, err
+	}
+
+	encrypted, err := c.Encrypt(data)
+	if err != nil {
+		return nil, err
+	}
+
+	serialNo, err := c.GenerateSerialNo()
+	if err != nil {
+		return nil, err
+	}
+
+	req := &Request{
+		PlatformCode: c.platformCode,
+		SignType:     "RSA",
+		Format:       "JSON",
+		Timestamp:    time.Now().In(timezoneBeijing).Format("2006-01-02 15:04:05"),
+		Version:      "1.0",
+		SerialNo:     serialNo,
+		Content:      encrypted,
+	}
+	err = c.SignRequest(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+func (c *Client) decryptAndUnmarshalResponse(content string, v any) error {
+	data, err := c.Decrypt(content)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(data, v)
 	if err != nil {
 		return err
 	}
@@ -357,4 +445,12 @@ func (c *Client) post(ctx context.Context, url string, body, resultPtr any) erro
 	}
 
 	return nil
+}
+
+func base64EncodeToString(data []byte) string {
+	return base64.StdEncoding.EncodeToString(data)
+}
+
+func base64DecodeString(s string) ([]byte, error) {
+	return base64.StdEncoding.DecodeString(s)
 }

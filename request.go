@@ -1,9 +1,7 @@
 package piaotong
 
 import (
-	"encoding/json"
 	"strings"
-	"time"
 )
 
 type Request struct {
@@ -17,50 +15,15 @@ type Request struct {
 	Content      string `json:"content,omitempty"`
 }
 
-func (c *Client) buildRequest(content any) (*Request, error) {
-	data, err := json.Marshal(content)
-	if err != nil {
-		return nil, err
-	}
-
-	encrypted, err := c.encrypt(data)
-	if err != nil {
-		return nil, err
-	}
-
-	serialNo, err := c.GenerateSerialNo()
-	if err != nil {
-		return nil, err
-	}
-
-	req := &Request{
-		PlatformCode: c.platformCode,
-		SignType:     "RSA",
-		Format:       "JSON",
-		Timestamp:    time.Now().In(timezoneBeijing).Format("2006-01-02 15:04:05"),
-		Version:      "1.0",
-		SerialNo:     serialNo,
-		Content:      encrypted,
-	}
-	sign, err := c.sign(c.buildSignatureContent(req))
-	if err != nil {
-		return nil, err
-	}
-
-	req.Sign = sign
-
-	return req, nil
-}
-
-func (c *Client) buildSignatureContent(req *Request) string {
+func (r *Request) SignatureContent() string {
 	pairs := [][2]string{
-		{"content", req.Content},
-		{"format", req.Format},
-		{"platformCode", req.PlatformCode},
-		{"serialNo", req.SerialNo},
-		{"signType", req.SignType},
-		{"timestamp", req.Timestamp},
-		{"version", req.Version},
+		{"content", r.Content},
+		{"format", r.Format},
+		{"platformCode", r.PlatformCode},
+		{"serialNo", r.SerialNo},
+		{"signType", r.SignType},
+		{"timestamp", r.Timestamp},
+		{"version", r.Version},
 	}
 
 	parts := make([]string, 0, len(pairs))
