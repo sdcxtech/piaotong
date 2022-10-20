@@ -4,6 +4,15 @@
 
 Golang SDK for 票通
 
+## Usage
+Open blue invoice
+
+```go
+c := piaotong.New(piaotong.Config{})
+resp, _ := c.OpenBlueInvoice(ctx, &piaotong.OpenBlueInvoiceRequest{})
+fmt.Println(resp)
+```
+
 
 ## Development
 
