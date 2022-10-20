@@ -238,23 +238,29 @@ func (c *Client) QueryInvoice(
 		return nil, err
 	}
 
-	downloadURL, err := base64DecodeString(resp.DownloadURL)
-	if err != nil {
-		return nil, err
+	if resp.DownloadURL != "" {
+		downloadURL, err := base64DecodeString(resp.DownloadURL)
+		if err != nil {
+			return nil, err
+		}
+		resp.DownloadURL = string(downloadURL)
 	}
-	resp.DownloadURL = string(downloadURL)
 
-	vatPlatformInvPreviewURL, err := base64DecodeString(resp.VatPlatformInvPreviewURL)
-	if err != nil {
-		return nil, err
+	if resp.VatPlatformInvPreviewURL != "" {
+		vatPlatformInvPreviewURL, err := base64DecodeString(resp.VatPlatformInvPreviewURL)
+		if err != nil {
+			return nil, err
+		}
+		resp.VatPlatformInvPreviewURL = string(vatPlatformInvPreviewURL)
 	}
-	resp.VatPlatformInvPreviewURL = string(vatPlatformInvPreviewURL)
 
-	invPreviewQrcodePath, err := base64DecodeString(resp.InvPreviewQrcodePath)
-	if err != nil {
-		return nil, err
+	if resp.InvPreviewQrcodePath != "" {
+		invPreviewQrcodePath, err := base64DecodeString(resp.InvPreviewQrcodePath)
+		if err != nil {
+			return nil, err
+		}
+		resp.InvPreviewQrcodePath = string(invPreviewQrcodePath)
 	}
-	resp.InvPreviewQrcodePath = string(invPreviewQrcodePath)
 
 	return resp, nil
 }
