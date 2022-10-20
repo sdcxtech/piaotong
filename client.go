@@ -78,34 +78,35 @@ func (c *Client) GenerateInvoiceReqSerialNo() (string, error) {
 
 type (
 	OpenBlueInvoiceRequest struct {
-		TaxpayerNum        string       `json:"taxpayerNum"`
-		InvoiceReqSerialNo string       `json:"invoiceReqSerialNo"`
-		BuyerName          string       `json:"buyerName"`
-		BuyerTaxpayerNum   string       `json:"buyerTaxpayerNum,omitempty"`
-		BuyerAddress       string       `json:"buyerAddress,omitempty"`
-		BuyerTel           string       `json:"buyerTel,omitempty"`
-		BuyerBankName      string       `json:"buyerBankName,omitempty"`
-		BuyerBankAccount   string       `json:"buyerBankAccount,omitempty"`
-		SellerAddress      string       `json:"sellerAddress,omitempty"`
-		SellerTel          string       `json:"sellerTel,omitempty"`
-		SellerBankName     string       `json:"sellerBankName,omitempty"`
-		SellerBankAccount  string       `json:"sellerBankAccount,omitempty"`
-		ItemName           string       `json:"itemName,omitempty"`
-		CasherName         string       `json:"casherName,omitempty"`
-		ReviewerName       string       `json:"reviewerName,omitempty"`
-		DrawerName         string       `json:"drawerName,omitempty"`
-		TakerName          string       `json:"takerName,omitempty"`
-		TakerTel           string       `json:"takerTel,omitempty"`
-		TakerEmail         string       `json:"takerEmail,omitempty"`
-		SpecialInvoiceKind string       `json:"specialInvoiceKind,omitempty"`
-		Remark             string       `json:"remark,omitempty"`
-		DefinedData        string       `json:"definedData,omitempty"`
-		TradeNo            string       `json:"tradeNo,omitempty"`
-		ExtensionNum       string       `json:"extensionNum,omitempty"`
-		MachineCode        string       `json:"machineCode,omitempty"`
-		AgentInvoiceFlag   string       `json:"agentInvoiceFlag,omitempty"`
-		ShopNum            string       `json:"shopNum,omitempty"`
-		ItemList           []*GoodsItem `json:"itemList"`
+		TaxpayerNum        string `json:"taxpayerNum"`
+		InvoiceReqSerialNo string `json:"invoiceReqSerialNo"`
+		BuyerName          string `json:"buyerName"`
+		BuyerTaxpayerNum   string `json:"buyerTaxpayerNum,omitempty"`
+		BuyerAddress       string `json:"buyerAddress,omitempty"`
+		BuyerTel           string `json:"buyerTel,omitempty"`
+		BuyerBankName      string `json:"buyerBankName,omitempty"`
+		BuyerBankAccount   string `json:"buyerBankAccount,omitempty"`
+		SellerAddress      string `json:"sellerAddress,omitempty"`
+		SellerTel          string `json:"sellerTel,omitempty"`
+		SellerBankName     string `json:"sellerBankName,omitempty"`
+		SellerBankAccount  string `json:"sellerBankAccount,omitempty"`
+		ItemName           string `json:"itemName,omitempty"`
+		CasherName         string `json:"casherName,omitempty"`
+		ReviewerName       string `json:"reviewerName,omitempty"`
+		DrawerName         string `json:"drawerName,omitempty"`
+		TakerName          string `json:"takerName,omitempty"`
+		TakerTel           string `json:"takerTel,omitempty"`
+		TakerEmail         string `json:"takerEmail,omitempty"`
+		SpecialInvoiceKind string `json:"specialInvoiceKind,omitempty"`
+		Remark             string `json:"remark,omitempty"`
+		DefinedData        string `json:"definedData,omitempty"`
+		TradeNo            string `json:"tradeNo,omitempty"`
+		ExtensionNum       string `json:"extensionNum,omitempty"`
+		MachineCode        string `json:"machineCode,omitempty"`
+		AgentInvoiceFlag   string `json:"agentInvoiceFlag,omitempty"`
+		ShopNum            string `json:"shopNum,omitempty"`
+
+		ItemList []*GoodsItem `json:"itemList"`
 	}
 
 	GoodsItem struct {
@@ -149,13 +150,13 @@ func (c *Client) OpenBlueInvoice(
 
 type (
 	OpenRedInvoiceRequest struct {
-		TaxpayerNum        string  `json:"taxpayerNum"`
-		InvoiceReqSerialNo string  `json:"invoiceReqSerialNo"`
-		InvoiceCode        string  `json:"invoiceCode"`
-		InvoiceNo          string  `json:"invoiceNo"`
-		RedReason          string  `json:"redReason"`
-		Amount             float64 `json:"amount"`
-		DefinedData        string  `json:"definedData,omitempty"`
+		TaxpayerNum        string `json:"taxpayerNum"`
+		InvoiceReqSerialNo string `json:"invoiceReqSerialNo"`
+		InvoiceCode        string `json:"invoiceCode"`
+		InvoiceNo          string `json:"invoiceNo"`
+		RedReason          string `json:"redReason"`
+		Amount             string `json:"amount"`
+		DefinedData        string `json:"definedData,omitempty"`
 	}
 
 	OpenRedInvoiceResponse struct {
@@ -215,6 +216,93 @@ func (c *Client) QueryInvoice(
 	resp := &QueryInvoiceResponse{}
 
 	err := c.request(ctx, "/tp/openapi/queryInvoice.pt", req, resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
+type (
+	RegisterRequest struct {
+		TaxpayerNum                string `json:"taxpayerNum"`
+		EnterpriseName             string `json:"enterpriseName"`
+		LegalPersonName            string `json:"legalPersonName"`
+		ContactsName               string `json:"contactsName"`
+		ContactsEmail              string `json:"contactsEmail"`
+		ContactsPhone              string `json:"contactsPhone"`
+		RegionCode                 string `json:"regionCode"`
+		CityName                   string `json:"cityName"`
+		EnterpriseAddress          string `json:"enterpriseAddress"`
+		TaxRegistrationCertificate string `json:"taxRegistrationCertificate"`
+		TaxControlDeviceType       string `json:"taxControlDeviceType"`
+	}
+
+	RegisterResponse struct {
+		TaxpayerNum    string `json:"taxpayerNum"`
+		EnterpriseName string `json:"enterpriseName"`
+	}
+)
+
+func (c *Client) Register(
+	ctx context.Context, req *RegisterRequest,
+) (*RegisterResponse, error) {
+	resp := &RegisterResponse{}
+
+	err := c.request(ctx, "/tp/openapi/register.pt", req, resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
+type (
+	GetEnterpriseInfoRequest struct {
+		TaxpayerNum    string `json:"taxpayerNum"`
+		EnterpriseName string `json:"enterpriseName"`
+	}
+
+	GetEnterpriseInfoResponse struct {
+		TaxpayerNum               string `json:"taxpayerNum"`
+		EnterpriseName            string `json:"enterpriseName"`
+		LegalPersonName           string `json:"legalPersonName"`
+		ContactsName              string `json:"contactsName"`
+		ContactsEmail             string `json:"contactsEmail"`
+		ContactsPhone             string `json:"contactsPhone"`
+		RegionCode                string `json:"regionCode"`
+		CityName                  string `json:"cityName"`
+		EnterpriseAddress         string `json:"enterpriseAddress"`
+		InvitationCode            string `json:"invitationCode"`
+		ReviewStatus              string `json:"reviewStatus"`
+		ReviewOpinion             string `json:"reviewOpinion"`
+		TerminalType              string `json:"terminalType"`
+		InvoiceKind               string `json:"invoiceKind"`
+		InvoiceLayoutFileType     string `json:"invoiceLayoutFileType"`
+		BlockchainInvSingleQuota  string `json:"blockchainInvSingleQuota"`
+		BlockchainInvDailyQuota   string `json:"blockchainInvDailyQuota"`
+		BlockchainInvMonthlyQuota string `json:"blockchainInvMonthlyQuota"`
+		ServiceStatus             string `json:"serviceStatus"`
+
+		TerminalList []*TerminalItem `json:"terminalList"`
+	}
+
+	TerminalItem struct {
+		DiskType         string `json:"diskType"`
+		ExtensionNum     string `json:"extensionNum"`
+		MachineCode      string `json:"machineCode"`
+		Available        string `json:"available"`
+		ServiceStartTime string `json:"serviceStartTime"`
+		ServiceEndTime   string `json:"serviceEndTime"`
+	}
+)
+
+func (c *Client) GetEnterpriseInfo(
+	ctx context.Context, req *GetEnterpriseInfoRequest,
+) (*GetEnterpriseInfoResponse, error) {
+	resp := &GetEnterpriseInfoResponse{}
+
+	err := c.request(ctx, "/tp/openapi/getEnterpriseInfo.pt", req, resp)
 	if err != nil {
 		return nil, err
 	}
