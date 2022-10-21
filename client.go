@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"math/rand"
-	"strconv"
 	"strings"
 	"time"
 
@@ -26,6 +25,7 @@ type Client struct {
 	tripleDESKey       []byte
 
 	restyClient *resty.Client
+	rand        *rand.Rand
 }
 
 type Config struct {
@@ -48,6 +48,7 @@ func New(config Config) *Client {
 		piaotongPublicKey:  []byte(config.PiaotongPublicKey),
 		tripleDESKey:       []byte(config.TripleDESKey),
 		restyClient:        restyClient,
+		rand:               rand.New(rand.NewSource(time.Now().UnixNano())), // nolint: gosec
 	}
 }
 
@@ -63,14 +64,14 @@ func (c *Client) PlatformName() string {
 func (c *Client) GenerateSerialNo() string {
 	ts := time.Now().In(timezoneBeijing).Format("20060102150405.000")
 	ts = strings.Replace(ts, ".", "", 1)
-	suffix := strconv.Itoa(rand.Intn(100_000)) // nolint: gosec
+	suffix := fmt.Sprintf("%05d", c.rand.Intn(100_000)) // nolint: gosec
 
 	return strings.Join([]string{c.platformName, ts, suffix}, "")
 }
 
 func (c *Client) GenerateInvoiceReqSerialNo() string {
 	ts := time.Now().In(timezoneBeijing).Format("20060102150405")
-	suffix := strconv.Itoa(rand.Intn(100)) // nolint: gosec
+	suffix := fmt.Sprintf("%02d", c.rand.Intn(100)) // nolint: gosec
 
 	return strings.Join([]string{c.platformName, ts, suffix}, "")
 }
