@@ -4,8 +4,6 @@ github.com/forgoer/openssl v1.4.0 h1:rPMnQ92OKuBsKnfY/GmUDunnP72Cy+zviAompWMdC9U
 github.com/forgoer/openssl v1.4.0/go.mod h1:NMVFOzYeLVR7UiGTxsa+A21nrERTZ3Rv2JHDPcJpDyI=
 github.com/go-resty/resty/v2 v2.7.0 h1:me+K9p3uhSmXtrBZ4k9jcEAfJmuC8IivWHwaLZwPrFY=
 github.com/go-resty/resty/v2 v2.7.0/go.mod h1:9PWDzw47qPphMRFfhsyk0NnSgvluHcljSMVIq3w7q0I=
-github.com/jkomyno/nanoid v0.0.0-20210415085252-937cefe9123e h1:A989BWTFdvU9CJ8xvwPAgRiw567A1ZtFYnJn+5mBcdI=
-github.com/jkomyno/nanoid v0.0.0-20210415085252-937cefe9123e/go.mod h1:SGgCMakxrFA/koebjyty7cDQU4OMDL38eClGI+oy+bA=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=

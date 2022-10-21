@@ -6,11 +6,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math/rand"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/go-resty/resty/v2"
-	"github.com/jkomyno/nanoid"
 )
 
 var ErrInvalidSignature = errors.New("invalid signature")
@@ -58,26 +59,20 @@ func (c *Client) PlatformName() string {
 	return c.platformName
 }
 
-func (c *Client) GenerateSerialNo() (string, error) {
-	id, err := nanoid.Nanoid(8)
-	if err != nil {
-		return "", err
-	}
+// GenerateSerialNo returns a serialNo specified in the API doc.
+func (c *Client) GenerateSerialNo() string {
+	ts := time.Now().In(timezoneBeijing).Format("20060102150405.000")
+	ts = strings.Replace(ts, ".", "", 1)
+	suffix := strconv.Itoa(rand.Intn(100_000)) // nolint: gosec
 
-	ts := time.Now().In(timezoneBeijing).Format("20060102150405")
-
-	return strings.Join([]string{c.platformName, ts, id}, ""), nil
+	return strings.Join([]string{c.platformName, ts, suffix}, "")
 }
 
-func (c *Client) GenerateInvoiceReqSerialNo() (string, error) {
-	const alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+func (c *Client) GenerateInvoiceReqSerialNo() string {
+	ts := time.Now().In(timezoneBeijing).Format("20060102150405")
+	suffix := strconv.Itoa(rand.Intn(100)) // nolint: gosec
 
-	id, err := nanoid.Generate(alphabet, 16)
-	if err != nil {
-		return "", err
-	}
-
-	return c.platformName + id, nil
+	return strings.Join([]string{c.platformName, ts, suffix}, "")
 }
 
 type (
@@ -392,18 +387,13 @@ func (c *Client) buildRequest(content any) (*Request, error) {
 		return nil, err
 	}
 
-	serialNo, err := c.GenerateSerialNo()
-	if err != nil {
-		return nil, err
-	}
-
 	req := &Request{
 		PlatformCode: c.platformCode,
 		SignType:     "RSA",
 		Format:       "JSON",
 		Timestamp:    time.Now().In(timezoneBeijing).Format("2006-01-02 15:04:05"),
 		Version:      "1.0",
-		SerialNo:     serialNo,
+		SerialNo:     c.GenerateSerialNo(),
 		Content:      encrypted,
 	}
 	err = c.SignRequest(req)
